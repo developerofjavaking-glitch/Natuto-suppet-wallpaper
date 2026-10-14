@@ -27,6 +27,7 @@ import com.example.wallpaper.WallpaperPreferences
 sealed interface AppScreen {
     data object Home : AppScreen
     data class ChargingShow(val character: NarutoCharacter) : AppScreen
+    data class FullscreenWallpaper(val character: NarutoCharacter) : AppScreen
 }
 
 class MainActivity : ComponentActivity() {
@@ -66,11 +67,20 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(
                                 onOpenChargingShow = { character ->
                                     currentScreen = AppScreen.ChargingShow(character)
+                                },
+                                onOpenFullscreenWallpaper = { character ->
+                                    currentScreen = AppScreen.FullscreenWallpaper(character)
                                 }
                             )
                         }
                         is AppScreen.ChargingShow -> {
                             SuperChargingShowScreen(
+                                initialCharacter = screen.character,
+                                onClose = { currentScreen = AppScreen.Home }
+                            )
+                        }
+                        is AppScreen.FullscreenWallpaper -> {
+                            com.example.ui.wallpaper.FullscreenWallpaperViewer(
                                 initialCharacter = screen.character,
                                 onClose = { currentScreen = AppScreen.Home }
                             )

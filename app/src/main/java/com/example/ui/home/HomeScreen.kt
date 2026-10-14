@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -86,7 +87,8 @@ import java.util.Locale
 
 @Composable
 fun HomeScreen(
-    onOpenChargingShow: (NarutoCharacter) -> Unit
+    onOpenChargingShow: (NarutoCharacter) -> Unit,
+    onOpenFullscreenWallpaper: (NarutoCharacter) -> Unit
 ) {
     val context = LocalContext.current
     val prefs = remember { WallpaperPreferences(context) }
@@ -297,6 +299,36 @@ fun HomeScreen(
                             }
                     )
 
+                    // Top Right: Fullscreen Studio Pill Button
+                    Surface(
+                        color = Color.Black.copy(alpha = 0.65f),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(14.dp)
+                            .clickable { onOpenFullscreenWallpaper(selectedCharacter) }
+                            .testTag("btn_fullscreen_preview_pill")
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = androidx.compose.material.icons.Icons.Default.Wallpaper,
+                                contentDescription = "Fullscreen",
+                                tint = selectedCharacter.glowColor,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "Fullscreen",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
+
                     // Top Ninja HUD Overlay: Digital Clock & Date
                     Column(
                         modifier = Modifier
@@ -400,66 +432,169 @@ fun HomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // 3. Hero Action Buttons: Launch Super Charging Show & Apply Wallpaper
-            Row(
+            // 3. Hero Wallpaper Action Buttons
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
+                // Primary Big Wallpaper Studio Button
                 Button(
-                    onClick = { onOpenChargingShow(selectedCharacter) },
+                    onClick = { onOpenFullscreenWallpaper(selectedCharacter) },
                     modifier = Modifier
-                        .weight(1f)
+                        .fillMaxWidth()
                         .height(54.dp)
-                        .testTag("btn_launch_charging_show"),
+                        .testTag("btn_open_wallpaper_studio"),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = NinjaPrimary
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ElectricBolt,
+                        imageVector = Icons.Default.Wallpaper,
                         contentDescription = null,
                         tint = Color.Black
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "Super Charging",
-                        fontSize = 14.sp,
+                        text = "Open Wallpaper Studio (Fullscreen)",
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = Color.Black
                     )
                 }
 
-                OutlinedButton(
-                    onClick = { showSettingsSheet = true },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(54.dp)
-                        .testTag("btn_set_wallpaper_modal"),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder().copy(
-                        brush = Brush.horizontalGradient(listOf(ChakraGold, RasenganBlue))
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Wallpaper,
-                        contentDescription = null,
-                        tint = ChakraGold
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedButton(
+                        onClick = { showSettingsSheet = true },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(50.dp)
+                            .testTag("btn_set_wallpaper_modal"),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        border = ButtonDefaults.outlinedButtonBorder().copy(
+                            brush = Brush.horizontalGradient(listOf(ChakraGold, RasenganBlue))
+                        )
+                    ) {
+                        Icon(imageVector = Icons.Default.Tune, contentDescription = null, tint = ChakraGold)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(text = "Apply Live", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    }
+
+                    OutlinedButton(
+                        onClick = { onOpenChargingShow(selectedCharacter) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(50.dp)
+                            .testTag("btn_launch_charging_show"),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        border = ButtonDefaults.outlinedButtonBorder().copy(
+                            brush = Brush.horizontalGradient(listOf(RasenganBlue, ChakraGold))
+                        )
+                    ) {
+                        Icon(imageVector = Icons.Default.ElectricBolt, contentDescription = null, tint = RasenganBlue)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(text = "Charging Show", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 4. Wallpaper Atmosphere & Visual Themes Section
+            Text(
+                text = "WALLPAPER ATMOSPHERE & VISUAL FILTERS",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Gray,
+                letterSpacing = 1.sp,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Card(
+                colors = CardDefaults.cardColors(containerColor = DarkNavyCard),
+                shape = RoundedCornerShape(18.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
                     Text(
-                        text = "Set Wallpaper",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = "Atmospheric Particle Style",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
                         color = Color.White
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        listOf(
+                            "JUTSU_ENERGY" to "🌀 Jutsu Surge",
+                            "SAKURA_PETALS" to "🌸 Falling Sakura",
+                            "LIGHTNING_STORM" to "⚡ Thunder Storm",
+                            "KURAMA_FIRE" to "🦊 Kurama Fire",
+                            "CROW_FLOCK" to "🦅 Akatsuki Crows"
+                        ).forEach { (effect, label) ->
+                            val isSelected = prefs.atmosphereEffect == effect
+                            androidx.compose.material3.FilterChip(
+                                selected = isSelected,
+                                onClick = { prefs.atmosphereEffect = effect },
+                                label = { Text(label, fontSize = 11.sp) },
+                                colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = selectedCharacter.primaryColor,
+                                    selectedLabelColor = Color.Black
+                                )
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Shinobi Color Filter",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        listOf(
+                            "VIBRANT" to "🌟 Vibrant Anime",
+                            "DARK_SHINOBI" to "🌑 Dark OLED",
+                            "CYBER_NEON" to "⚡ Cyber Neon",
+                            "MANGA_SEPIA" to "📜 Manga Sepia"
+                        ).forEach { (filter, label) ->
+                            val isSelected = prefs.colorFilter == filter
+                            androidx.compose.material3.FilterChip(
+                                selected = isSelected,
+                                onClick = { prefs.colorFilter = filter },
+                                label = { Text(label, fontSize = 11.sp) },
+                                colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = selectedCharacter.glowColor,
+                                    selectedLabelColor = Color.Black
+                                )
+                            )
+                        }
+                    }
                 }
             }
 
