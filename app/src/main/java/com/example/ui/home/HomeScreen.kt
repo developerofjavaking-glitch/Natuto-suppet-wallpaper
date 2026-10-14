@@ -269,48 +269,11 @@ fun HomeScreen(
                         intensity = 1.1f
                     )
 
-                    // Center Floating Jutsu Orb (Rasengan / Chidori / Amaterasu / Raikiri)
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(160.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        when (selectedCharacter.id) {
-                            "naruto_sixpaths" -> {
-                                com.example.ui.components.DetailedRasenganVisualizer(
-                                    sizeDp = 150.dp,
-                                    batteryLevel = batteryState.level,
-                                    isCharging = batteryState.isCharging,
-                                    showBatteryText = false
-                                )
-                            }
-                            "sasuke_rinnegan" -> {
-                                com.example.ui.components.DetailedChidoriVisualizer(
-                                    sizeDp = 150.dp,
-                                    batteryLevel = batteryState.level,
-                                    isCharging = batteryState.isCharging,
-                                    showBatteryText = false
-                                )
-                            }
-                            "itachi_mangekyo" -> {
-                                com.example.ui.components.DetailedAmaterasuVisualizer(
-                                    sizeDp = 150.dp,
-                                    batteryLevel = batteryState.level,
-                                    isCharging = batteryState.isCharging,
-                                    showBatteryText = false
-                                )
-                            }
-                            "kakashi_raikiri" -> {
-                                com.example.ui.components.DetailedKamuiRaikiriVisualizer(
-                                    sizeDp = 150.dp,
-                                    batteryLevel = batteryState.level,
-                                    isCharging = batteryState.isCharging,
-                                    showBatteryText = false
-                                )
-                            }
-                        }
-                    }
+                    // Dynamic Character Skill Animated Directly Over Wallpaper
+                    com.example.ui.components.HeroWallpaperSkillOverlay(
+                        characterId = selectedCharacter.id,
+                        isCharging = batteryState.isCharging
+                    )
 
                     // Touch Jutsu Flash
                     if (jutsuFlash) {
