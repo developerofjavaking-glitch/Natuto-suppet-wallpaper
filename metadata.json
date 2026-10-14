@@ -1,0 +1,6 @@
+{
+  "name": "Pika Naruto Super Wallpaper",
+  "description": "Dynamic Naruto anime live wallpapers with super charging animations, interactive chakra effects, and authentic jutsu sound effects.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
